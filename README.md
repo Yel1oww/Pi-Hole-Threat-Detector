@@ -10,7 +10,7 @@ An automated Threat Intelligence pipeline that monitors **Pi-hole** traffic, cro
 This project creates a closed-loop security system for your home network:
 1.  **Extract:** n8n pulls logs from your **Pi-hole** every 5 minutes.
 2.  **Analyze:** Domains are checked against **AlienVault OTX** and **VirusTotal**.
-3.  **Act:** If a domain exceeds a threat threshold (e.g., >= 10 malicious detections), n8n sends a command to Pi-hole to **immediately block** it.
+3.  **Act:** If a domain exceeds a threat threshold (e.g., >= 5 malicious detections), n8n sends a command to Pi-hole to **immediately block** it.
 4.  **Log:** All scan results are stored in **InfluxDB**.
 5.  **Visualize:** A **Grafana** dashboard displays real-time threat levels and block history.
 
