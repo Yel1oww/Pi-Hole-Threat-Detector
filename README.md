@@ -1,6 +1,6 @@
-# 🛡️ Pi-hole Threat Intelligence & Auto-Blocking
+# 🛡️ DNS Threat Detector
 
-Automated security pipeline that monitors Pi-hole DNS queries, cross-references them with global threat feeds (AlienVault & VirusTotal), automatically blocks malicious domains, and visualizes everything in Grafana.
+An automated Threat Intelligence pipeline that monitors **Pi-hole** traffic, cross-references domains against **VirusTotal** and **AlienVault OTX**, automatically blocks malicious actors, and visualizes everything in **Grafana**.
 
 ---
 
@@ -8,7 +8,7 @@ Automated security pipeline that monitors Pi-hole DNS queries, cross-references 
 This project creates a closed-loop security system for your home network:
 1.  **Extract:** n8n pulls logs from your **Pi-hole** every 5 minutes.
 2.  **Analyze:** Domains are checked against **AlienVault OTX** and **VirusTotal**.
-3.  **Act:** If a domain exceeds a threat threshold (e.g., >10 VT detections), n8n sends a command to Pi-hole to **immediately block** it.
+3.  **Act:** If a domain exceeds a threat threshold (e.g., >= 10 malicious detections), n8n sends a command to Pi-hole to **immediately block** it.
 4.  **Log:** All scan results are stored in **InfluxDB**.
 5.  **Visualize:** A **Grafana** dashboard displays real-time threat levels and block history.
 
@@ -17,8 +17,9 @@ This project creates a closed-loop security system for your home network:
 * **n8n** (Self-hosted or Cloud)
 * **InfluxDB 2.x** (For data storage)
 * **Grafana** (For the dashboard)
-* **API Keys:** * [AlienVault OTX](https://otx.alienvault.com/) (Free)
-    * [VirusTotal](https://www.virustotal.com/) (Free tier allows 4 requests/min)
+* **API Keys:**
+    * [AlienVault OTX](https://otx.alienvault.com/) (Free)
+    * [VirusTotal](https://www.virustotal.com/) (Free tier)
 
 ---
 
@@ -30,22 +31,21 @@ This project creates a closed-loop security system for your home network:
 3.  Copy the content and paste it directly onto the n8n canvas.
 4.  **Configuration Required:**
     * Update the **HTTP Request** nodes with your Pi-hole and InfluxDB IP addresses.
-    * Add your API keys to the header parameters for VirusTotal and AlienVault nodes.
-    * Update the InfluxDB node with your Organization, Bucket, and Token.
+    * Enter your API keys in the Header parameters for the **VirusTotal** and **AlienVault** nodes.
+    * Update the **Push to InfluxDB** node with your Org and Bucket names.
 
 ### 2. InfluxDB Setup
-Create a bucket named `DNS_Threats` (or your preferred name) in your InfluxDB UI. Ensure your API token has **Write** permissions for this bucket.
+Create a bucket (e.g., `DNS_Security`) in your InfluxDB UI. Ensure your API token has **Write** permissions for this bucket.
 
 ### 3. Grafana Dashboard
 1.  In Grafana, go to **Dashboards** > **New** > **Import**.
 2.  Upload the `grafana_dashboard.json` file or paste the JSON text.
-3.  Select your **InfluxDB** data source from the dropdown.
-4.  If your bucket name is not `AI`, you may need to find and replace the bucket name in the panel queries.
+3. The JSON contains the placeholder `[YOUR_BUCKET_NAME]`. You should find and replace this with your actual InfluxDB bucket name before importing, or update the queries in the panels manually after the import is complete.
 
 ---
 
 ## ⚙️ Configuration Variables
-When setting up the JSONs, ensure you replace the following placeholders:
+When setting up the JSON files, ensure you replace the following placeholders:
 
 | Placeholder | Description |
 | :--- | :--- |
